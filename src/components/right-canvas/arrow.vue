@@ -67,11 +67,11 @@ export default {
   mounted() {
     console.log(this.handleSelect);
     //注册一个颜色样式
-    this.actorstyle = {
-      [mxConstants.STYLE_INDICATOR_STROKECOLOR]: "red",
-      [mxConstants.STYLE_INDICATOR_DIRECTION]: "yellow",
-    };
-    this.graph.getStylesheet().putCellStyle("actorstyle", this.actorstyle);
+    // this.actorstyle = {
+    //   [mxConstants.STYLE_INDICATOR_STROKECOLOR]: "red",
+    //   [mxConstants.STYLE_INDICATOR_DIRECTION]: "yellow",
+    // };
+    // this.graph.getStylesheet().putCellStyle("actorstyle", this.actorstyle);
   },
   methods: {
     //显示模板
@@ -92,7 +92,7 @@ export default {
           this.ChangeShape("actor");
           break;
         case 3:
-          this.ChangeShape("right-arrow");
+          //   this.ChangeShape("right arrow");
           break;
       }
     },
@@ -109,7 +109,7 @@ export default {
           20,
           80,
           30,
-          `shape=${value};perimeter=ellipsePerimeter;actorstyle;`
+          `shape=${value};perimeter=ellipsePerimeter;`
         );
         //20指距离左this.边的高度，20指距离顶部的高度，80指创建图形的宽度，30指创建图形的高度
         const v2 = this.graph.insertVertex(

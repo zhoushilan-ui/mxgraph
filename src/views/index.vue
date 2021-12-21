@@ -52,6 +52,18 @@ export default {
     window.addEventListener("mousewheel", this.getScroll, {
       passive: false,
     });
+
+    //声名一个全局的图片样式
+    const mystyles = {
+      [mxConstants.STYLE_STROKECOLOR]: "#ebb862", // 边框颜色
+      //   [mxConstants.STYLE_FONTCOLOR]: "#333333",
+      [mxConstants.STYLE_FILLCOLOR]: "#FFDA00", // 背景色
+      //   [mxConstants.STYLE_LABEL_BACKGROUNDCOLOR]: "#e6e6e6",
+      [mxConstants.STYLE_GRADIENTCOLOR]: "#1EFF00",
+      [mxConstants.STYLE_GRADIENT_DIRECTION]: mxConstants.DIRECTION_WEST,
+      [mxConstants.STYLE_LABEL_WIDTH]: "labelWidth",
+    };
+    this.graph.getStylesheet().putCellStyle("mystyles", mystyles);
   },
   methods: {
     //初始化mxgraph容器
@@ -66,7 +78,56 @@ export default {
       keyDown(this.graph);
       //鼠标右侧菜单栏
       popupMenuHandler(this.graph);
-      //引用标间
+
+      const parent = this.graph.getDefaultParent();
+      this.graph.getModel().beginUpdate();
+      try {
+        // graph.insertVertex，增加一个新的顶点到给定的父mxcell中
+        const v1 = this.graph.insertVertex(
+          parent,
+          null,
+          "hello",
+          20,
+          20,
+          80,
+          30,
+          `shape=actors;perimeter=ellipsePerimeter;`
+        );
+        //20指距离左this.边的高度，20指距离顶部的高度，80指创建图形的宽度，30指创建图形的高度
+        const v2 = this.graph.insertVertex(
+          parent,
+          null,
+          "World!",
+          200,
+          150,
+          80,
+          30,
+          `shape=CreateCloud;perimeter=ellipsePerimeter;`
+        );
+        const v3 = this.graph.insertVertex(
+          parent,
+          null,
+          "World!",
+          300,
+          150,
+          120,
+          130,
+          `shape=CreateCylin;perimeter=ellipsePerimeter;`
+        );
+
+        var v5 = this.graph.insertVertex(
+          this.parent,
+          null,
+          "柱形",
+          500,
+          50,
+          150,
+          150,
+          "mystyles;shape=cylinder;"
+        );
+      } finally {
+        this.graph.getModel().endUpdate();
+      }
     },
 
     // handleScroll(e) {

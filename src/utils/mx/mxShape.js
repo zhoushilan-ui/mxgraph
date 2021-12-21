@@ -2,28 +2,35 @@
  * 使用mxgraph创建基本形状的原型属性，自定义创建形状
  *
  *
- *
  */
 
 import mxgraph from "../init";
-// import init from "./mxKeyHandler";
 function init() {
   //创建一个微笑演员的形状
   actors();
-  //创建右箭头
-  rightArrow();
+  //创建一个新的云
+  CreateCloud();
+
+  //创建一个新的气缸
+  CreateCylinder();
 }
 //创建微笑演员
 function actors() {
   function ActorsShape() {}
   ActorsShape.prototype = new mxActor();
+  ActorsShape.prototype.constructor = ActorsShape;
   mxCellRenderer.registerShape("actors", ActorsShape);
   ActorsShape.prototype.redrawPath = function (path, x, y, w, h) {
     ellipse2path(path, x, y, w, h);
   };
+  mxCellRenderer.prototype.getLabelValue = function (state) {
+    // console.log(state);
+    return state.view.graph.getLabel(state.cell);
+  };
 }
-
 function ellipse2path(path, x, y, w, h) {
+  //设置形状的边框是否是虚线
+  path.setDashed(true, true);
   var width = w / 3;
   path.moveTo(0, h);
   path.curveTo(0, (3 * h) / 5, 0, (2 * h) / 5, w / 2, (2 * h) / 5);
@@ -37,63 +44,76 @@ function ellipse2path(path, x, y, w, h) {
     (2 * h) / 5
   );
   path.curveTo(w, (2 * h) / 5, w, (3 * h) / 5, w, h);
-
   path.moveTo(w / 3, h / 4);
   path.curveTo(w / 3, h / 4, w / 2, h / 2.5, w / 1.5, h / 4);
   path.close();
   path.moveTo(x, y);
 }
-//创建右箭头
-function rightArrow() {
-  function ArrowShape() {}
-  ArrowShape.prototype = new mxActor();
-  mxCellRenderer.registerShape("right-arrow", ArrowShape);
-  ArrowShape.prototype.paintEdgeShape = function (c, pts) {
-    // Geometry of arrow
-    var spacing = mxConstants.ARROW_SPACING;
-    var width = mxConstants.ARROW_WIDTH;
-    var arrow = mxConstants.ARROW_SIZE;
 
-    // Base vector (between end points)
-    var p0 = pts[0];
-    var pe = pts[pts.length - 1];
-    var dx = pe.x - p0.x;
-    var dy = pe.y - p0.y;
-    var dist = Math.sqrt(dx * dx + dy * dy);
-    var length = dist - 2 * spacing - arrow;
+function CreateCloud() {
+  function CreateCloudShape() {}
+  CreateCloudShape.prototype = new mxCloud();
+  CreateCloudShape.prototype.constructor = CreateCloudShape;
+  mxCellRenderer.registerShape("CreateCloud", CreateCloudShape);
+  CreateCloudShape.prototype.redrawPath = function (c, x, y, w, h) {
+    console.log(c);
+    createCloud(c, x, y, w, h);
+  };
+}
 
-    // Computes the norm and the inverse norm
-    var nx = dx / dist;
-    var ny = dy / dist;
-    var basex = length * nx;
-    var basey = length * ny;
-    var floorx = (width * ny) / 3;
-    var floory = (-width * nx) / 3;
+function createCloud(c, x, y, w, h) {
+  //设置形状的填充色
+  c.setFillColor("red");
+  //设置行政的线宽的颜色
+  c.setStrokeColor("yellow");
+  c.moveTo(0.25 * w, 0.25 * h);
+  c.curveTo(0.05 * w, 0.25 * h, 0, 0.5 * h, 0.16 * w, 0.55 * h);
+  c.curveTo(0, 0.66 * h, 0.18 * w, 0.9 * h, 0.31 * w, 0.8 * h);
+  c.curveTo(0.4 * w, h, 0.7 * w, h, 0.8 * w, 0.8 * h);
+  c.curveTo(w, 0.8 * h, w, 0.6 * h, 0.875 * w, 0.5 * h);
+  c.curveTo(w, 0.3 * h, 0.8 * w, 0.1 * h, 0.625 * w, 0.2 * h);
+  c.curveTo(0.5 * w, 0.05 * h, 0.3 * w, 0.05 * h, 0.25 * w, 0.25 * h);
+  c.close();
+}
+//创建一个新的圆柱
+function CreateCylinder() {
+  function CreateCylinderShape() {}
+  CreateCylinderShape.prototype = new mxCylinder();
+  CreateCylinderShape.prototype.constructor = CreateCylinderShape;
+  mxCellRenderer.registerShape("CreateCylin", CreateCylinderShape);
+  CreateCylinderShape.prototype.redrawPath = function (
+    c,
+    x,
+    y,
+    w,
+    h,
+    isForeground
+  ) {
+    console.log(c);
+    //设置圆柱的渐变色
+    c.setGradient("#2D61FF", "#FF2D35", 50, 50, 50, 50);
+    var dy = this.getCylinderSize(x, y, w, h);
 
-    // Computes points
-    var p0x = p0.x - floorx / 2 + spacing * nx;
-    var p0y = p0.y - floory / 2 + spacing * ny;
-    var p1x = p0x + floorx;
-    var p1y = p0y + floory;
-    var p2x = p1x + basex;
-    var p2y = p1y + basey;
-    var p3x = p2x + floorx;
-    var p3y = p2y + floory;
-    // p4 not necessary
-    var p5x = p3x - 3 * floorx;
-    var p5y = p3y - 3 * floory;
+    if (
+      (isForeground && this.fill != null) ||
+      (!isForeground && this.fill == null)
+    ) {
+      c.moveTo(0, dy);
+      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
 
-    c.begin();
-    c.moveTo(p0x, p0y);
-    c.lineTo(p1x, p1y);
-    c.lineTo(p2x, p2y);
-    c.lineTo(p3x, p3y);
-    c.lineTo(pe.x - spacing * nx, pe.y - spacing * ny);
-    c.lineTo(p5x, p5y);
-    c.lineTo(p5x + floorx, p5y + floory);
-    c.close();
+      if (!isForeground) {
+        c.stroke();
+        c.begin();
+      }
+    }
 
-    c.fillAndStroke();
+    if (!isForeground) {
+      c.moveTo(0, dy);
+      c.curveTo(0, -dy / 3, w, -dy / 3, w, dy);
+      c.lineTo(w, h - dy);
+      c.curveTo(w, h + dy / 3, 0, h + dy / 3, 0, h - dy);
+      c.close();
+    }
   };
 }
 

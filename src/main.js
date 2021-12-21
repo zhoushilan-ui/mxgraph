@@ -12,7 +12,7 @@ Vue.use(ElementUI);
 Vue.use(index);
 Vue.config.productionTip = false;
 Vue.prototype.getScroll = getScroll;
-Vue.prototype.getScroll = Shape;
+Vue.prototype.getShape = Shape;
 new Vue({
   router,
   store,

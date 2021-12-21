@@ -63,5 +63,10 @@ window.mxPopupMenu = mxgraph.mxPopupMenu;
 window.mxGraphView = mxgraph.mxGraphView;
 window.mxClipboard = mxgraph.mxClipboard; //实现图形单元剪贴板的单例。
 window.mxPopupMenuHandler = mxgraph.mxPopupMenuHandler;
-window.mxActor = mxgraph.mxActor;
+window.mxActor = mxgraph.mxActor; //创建一个新的形状
+window.mxArrow = mxgraph.mxArrow; //创建一个新的箭头
+window.mxArrowConnector = mxgraph.mxArrowConnector; //创建一个箭头连接器
+window.mxLabel = mxgraph.mxLabel;
+window.mxCloud = mxgraph.mxCloud;
+window.mxCylinder = mxgraph.mxCylinder;
 export default mxgraph;
