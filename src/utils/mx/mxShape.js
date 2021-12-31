@@ -10,9 +10,10 @@ function init() {
   actors();
   //创建一个新的云
   CreateCloud();
-
-  //创建一个新的气缸
+  //创建一个新的气缸(圆柱)
   CreateCylinder();
+  //创建一个新的双椭圆
+  CreateNewDoubleEllipse();
 }
 //创建微笑演员
 function actors() {
@@ -30,7 +31,7 @@ function actors() {
 }
 function ellipse2path(path, x, y, w, h) {
   //设置形状的边框是否是虚线
-  path.setDashed(true, true);
+  //   path.setDashed(true, true);
   var width = w / 3;
   path.moveTo(0, h);
   path.curveTo(0, (3 * h) / 5, 0, (2 * h) / 5, w / 2, (2 * h) / 5);
@@ -56,7 +57,6 @@ function CreateCloud() {
   CreateCloudShape.prototype.constructor = CreateCloudShape;
   mxCellRenderer.registerShape("CreateCloud", CreateCloudShape);
   CreateCloudShape.prototype.redrawPath = function (c, x, y, w, h) {
-    console.log(c);
     createCloud(c, x, y, w, h);
   };
 }
@@ -89,7 +89,7 @@ function CreateCylinder() {
     h,
     isForeground
   ) {
-    console.log(c);
+    // console.log(c);
     //设置圆柱的渐变色
     c.setGradient("#2D61FF", "#FF2D35", 50, 50, 50, 50);
     var dy = this.getCylinderSize(x, y, w, h);
@@ -117,4 +117,32 @@ function CreateCylinder() {
   };
 }
 
+function CreateNewDoubleEllipse() {
+  function ActorNewDoubleEllipse() {}
+  ActorNewDoubleEllipse.prototype = new mxDoubleEllipse();
+  ActorNewDoubleEllipse.prototype.constructor = ActorNewDoubleEllipse;
+  mxCellRenderer.registerShape("newDoubleEllipse", ActorNewDoubleEllipse);
+  ActorNewDoubleEllipse.prototype.vmlScale = 20;
+  ActorNewDoubleEllipse.prototype.paintVertexShape = function (c, x, y, w, h) {
+    c.ellipse(x, y, w, h);
+    c.stroke();
+    console.log(c);
+    var inset = mxUtils.getValue(
+      this.style,
+      mxConstants.STYLE_MARGIN,
+      Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5))
+    );
+    x += 3 * inset;
+    y += 3 * inset;
+    w -= 6 * inset;
+    h -= 6 * inset;
+
+    if (w > 0 && h > 0) {
+      c.ellipse(x, y, w, h);
+    }
+    // c.fill();
+    // c.addNode(true, true);
+    c.fillAndStroke();
+  };
+}
 export default init();

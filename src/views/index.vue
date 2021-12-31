@@ -1,13 +1,31 @@
 <template>
   <div class="container">
     <el-container>
-      <el-header><navbar></navbar></el-header>
+      <el-header><navbar @Showdrag="Showdrag"></navbar></el-header>
       <div class="main-container">
         <el-aside width="250px"><silder></silder></el-aside>
         <el-main>
           <drawingBoard @init="init"></drawingBoard>
-          <rightPanel v-show="isPanel"></rightPanel
-        ></el-main>
+          <rightPanel v-show="isPanel"></rightPanel>
+          <vue-drag-resize
+            :w="300"
+            :h="300"
+            :isActive="true"
+            :isResizable="true"
+            v-show="isdrags"
+          >
+            <div class="drag-title">
+              <div class="drag-title-left">Outline</div>
+              <div class="drag-title-right">
+                <span class="el-icon-minus"></span
+                ><span class="el-icon-close" @click="handleClose"></span>
+              </div>
+            </div>
+            <div class="drag">
+              <div id="container-drage"></div>
+            </div>
+          </vue-drag-resize>
+        </el-main>
       </div>
     </el-container>
   </div>
@@ -25,6 +43,9 @@ import reset from "../utils/reset.js";
 import keyDown from "../utils/mx/mxKeyHandler";
 import popupMenuHandler from "../utils/mx/popupMenuHandler";
 import { mapState, mapGetters } from "vuex";
+import pkq from "../assets/images/pkq.jpg";
+
+import VueDragResize from "vue-drag-resize";
 export default {
   name: "index",
   components: {
@@ -33,17 +54,31 @@ export default {
     drawingBoard,
     rightPanel,
     redone: true,
+    VueDragResize,
   },
   data() {
     return {
       undoMng: null, // 状态管理器
       sign: false, // 用来告诉状态栏有被选中的单个的cell发生了变化，如果是正在展示的cell，则状态栏需要进行同步的修正.
       isCoverage: false, // 是否显示图层组件
+      pkq,
+      isdrags: false,
     };
   },
   computed: {
     ...mapState(["editor", "graph", "isPanel", "parent"]),
     // ...mapGetters(["parent"]),
+  },
+  watch: {
+    getSelectCell(n, o) {
+      // 展示cell信息
+      let tmpCell = this.graph && this.graph.getSelectionCells()[0];
+      //   this.$emit("selectcell", tmpCell);
+      console.log(tmpCell);
+      if (tmpCell == undefined) {
+        return;
+      }
+    },
   },
   created() {},
   mounted() {
@@ -53,17 +88,23 @@ export default {
       passive: false,
     });
 
-    //声名一个全局的图片样式
+    // 动态改变样式
+    this.graph.getView().updateStyle = true;
+    mxGraph.prototype.allowAutoPanning = true;
+    //声名一个全局的
     const mystyles = {
       [mxConstants.STYLE_STROKECOLOR]: "#ebb862", // 边框颜色
       //   [mxConstants.STYLE_FONTCOLOR]: "#333333",
       [mxConstants.STYLE_FILLCOLOR]: "#FFDA00", // 背景色
-      //   [mxConstants.STYLE_LABEL_BACKGROUNDCOLOR]: "#e6e6e6",
+      [mxConstants.STYLE_LABEL_BACKGROUNDCOLOR]: "#e6e6e6",
       [mxConstants.STYLE_GRADIENTCOLOR]: "#1EFF00",
       [mxConstants.STYLE_GRADIENT_DIRECTION]: mxConstants.DIRECTION_WEST,
       [mxConstants.STYLE_LABEL_WIDTH]: "labelWidth",
     };
+
     this.graph.getStylesheet().putCellStyle("mystyles", mystyles);
+    this.initGraph(this.graph);
+    // this.addCell();
   },
   methods: {
     //初始化mxgraph容器
@@ -83,53 +124,132 @@ export default {
       this.graph.getModel().beginUpdate();
       try {
         // graph.insertVertex，增加一个新的顶点到给定的父mxcell中
-        const v1 = this.graph.insertVertex(
-          parent,
-          null,
-          "hello",
-          20,
-          20,
-          80,
-          30,
-          `shape=actors;perimeter=ellipsePerimeter;`
-        );
+        // const v1 = this.graph.insertVertex(
+        //   parent,
+        //   null,
+        //   "hello",
+        //   20,
+        //   20,
+        //   80,
+        //   30,
+        //   `shape=actors;perimeter=ellipsePerimeter;`
+        // );
         //20指距离左this.边的高度，20指距离顶部的高度，80指创建图形的宽度，30指创建图形的高度
-        const v2 = this.graph.insertVertex(
+        // const v2 = this.graph.insertVertex(
+        //   parent,
+        //   null,
+        //   "World!",
+        //   200,
+        //   150,
+        //   80,
+        //   30,
+        //   `shape=CreateCloud;perimeter=ellipsePerimeter;`
+        // );
+        // const v3 = this.graph.insertVertex(
+        //   parent,
+        //   null,
+        //   "World!",
+        //   300,
+        //   150,
+        //   120,
+        //   130,
+        //   `shape=CreateCylin;perimeter=ellipsePerimeter;`
+        // );
+        // var v5 = this.graph.insertVertex(
+        //   this.parent,
+        //   null,
+        //   "柱形",
+        //   500,
+        //   50,
+        //   150,
+        //   150,
+        //   "mystyles;shape=cylinder;"
+        // );
+        // var v6 = this.graph.insertVertex(
+        //   this.parent,
+        //   null,
+        //   "双椭圆",
+        //   500,
+        //   50,
+        //   150,
+        //   150,
+        //   "shape=doubleEllipse;"
+        // );
+        // var v7 = this.graph.insertVertex(
+        //   this.parent,
+        //   null,
+        //   "新的双椭圆",
+        //   100,
+        //   240,
+        //   250,
+        //   250,
+        //   "shape=newDoubleEllipse;"
+        // );
+      } finally {
+        this.graph.getModel().endUpdate();
+      }
+      console.log(this.graph);
+    },
+    Showdrag(val) {
+      this.isdrags = val;
+    },
+    handleClose() {
+      this.isdrags = false;
+    },
+
+    //鼠标滑过时，出现的描点的位置
+    addCell() {
+      const parent = this.graph.getDefaultParent();
+
+      this.graph.getModel().beginUpdate();
+      try {
+        const cell = this.graph.insertVertex(
           parent,
           null,
-          "World!",
+          null,
+          500,
+          10,
           200,
-          150,
-          80,
-          30,
-          `shape=CreateCloud;perimeter=ellipsePerimeter;`
-        );
-        const v3 = this.graph.insertVertex(
-          parent,
-          null,
-          "World!",
-          300,
-          150,
-          120,
-          130,
-          `shape=CreateCylin;perimeter=ellipsePerimeter;`
+          200,
+          "shape=rect"
         );
 
-        var v5 = this.graph.insertVertex(
-          this.parent,
-          null,
-          "柱形",
-          500,
-          50,
-          150,
-          150,
-          "mystyles;shape=cylinder;"
-        );
+        cell["constraints"] = [
+          {
+            x: -0.5,
+            y: 0.25,
+            perimeter: true,
+          },
+          {
+            x: -0.5,
+            y: 0.25,
+            perimeter: false,
+          },
+          {
+            x: -0.5,
+            y: 0.75,
+            perimeter: true,
+          },
+          {
+            x: -0.5,
+            y: 0.75,
+            perimeter: false,
+          },
+          {
+            x: 1,
+            y: 0.25,
+            perimeter: false,
+          },
+          {
+            x: 1,
+            y: 0.75,
+            perimeter: false,
+          },
+        ];
       } finally {
         this.graph.getModel().endUpdate();
       }
     },
-
     // handleScroll(e) {
     //   e = e || window.event;
     //   if (e.wheelDelta == "120" || e.wheelDelta == "-120") {
@@ -240,5 +360,48 @@ export default {
 ::-webkit-scrollbar-thumb:active {
   background-color: #838282;
   cursor: pointer;
+}
+
+.content-container {
+  box-shadow: 1px 1px 10px #333;
+  background-color: aquamarine;
+}
+.drag-title {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 5px 20px;
+}
+.drag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  #container-drage {
+    height: 250px;
+    width: 250px;
+  }
+}
+
+.vdr.active:before {
+  box-shadow: 1px 1px 10px #333;
+  outline: none;
+  border-radius: 10px;
+}
+
+.vdr-stick-tl {
+  width: 0;
+  height: 0;
+}
+
+::v-deep .flow {
+  stroke-dasharray: 8;
+  animation: dash 0.5s linear;
+  animation-iteration-count: infinite;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: -16;
+  }
 }
 </style>

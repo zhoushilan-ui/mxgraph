@@ -41,3 +41,7 @@ body div.mxPopupMenu {
     font-size: 4pt;
   }
 }
+
+.vdr.active:before {
+  box-shadow: 1px ​1px 10px #333;
+}

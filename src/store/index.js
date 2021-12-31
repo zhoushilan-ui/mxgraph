@@ -12,6 +12,7 @@ export default new Vuex.Store({
     isPanel: false,
     isTemplate: false,
     parent: null,
+    modelName: [],
   },
   getters: {
     parent(state) {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     },
     setTemplate(state, isTemplate) {
       state.isTemplate = isTemplate;
+    },
+    setPushName(state, value) {
+      state.modelName.push(value);
     },
   },
   actions: {},

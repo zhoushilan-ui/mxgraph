@@ -69,4 +69,10 @@ window.mxArrowConnector = mxgraph.mxArrowConnector; //创建一个箭头连接�
 window.mxLabel = mxgraph.mxLabel;
 window.mxCloud = mxgraph.mxCloud;
 window.mxCylinder = mxgraph.mxCylinder;
+window.mxGraphLayout = mxgraph.mxGraphLayout;
+window.mxDoubleEllipse = mxgraph.mxDoubleEllipse; //创建一个新的双椭圆
+window.mxDragSource = mxgraph.mxDragSource;
+window.mxOutline = mxgraph.mxOutline;
+window.mxMorphing = mxgraph.mxMorphing;
+window.mxCircleLayout = mxgraph.mxCircleLayout;
 export default mxgraph;

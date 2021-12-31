@@ -15,7 +15,6 @@ function init() {
         tmp[0] = "shape=line";
         tmp[1] = "dashed";
       }
-      console.log(tmp);
       tmp.push("imageWidth=" + bounds[0].width * 1);
       tmp.push("imageHeight=" + bounds[0].height * 1);
       this.getModel().setStyle(cells[0], tmp.join(";"));
@@ -98,6 +97,12 @@ function init() {
       );
     }
   };
+
+  mxGraphLayout.prototype.getConstraint = function (key, cell, edge, source) {
+    return this.graph.getCurrentCellStyle(cell)[key];
+  };
+
+  mxOutline.prototype.updateOnPan = true;
 }
 
 export default init;
