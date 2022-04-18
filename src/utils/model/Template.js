@@ -72,8 +72,16 @@ export function Flowsegment(graph, parent) {
     }, 100);
   });
 }
-
+/**
+ *graph:画布的容器
+ *div：小窗口的父容器
+ *count：显示窗口调用的此时
+ */
 export function drage(graph, div, count) {
+  //updateOnPan设置为 true 以在源图平移时启用更新。
+  mxOutline.prototype.updateOnPan = true;
+  //用于暂停更新的可选布尔标志。默认为假。
+  mxOutline.prototype.suspended = true;
   if (count > 1) return;
   var outline = new mxOutline(graph, div);
   if (document.documentMode == 8) {
@@ -84,7 +92,6 @@ export function drage(graph, div, count) {
   var bounds = graph.getGraphBounds();
   graph.view.setTranslate(-bounds.x / scale, -bounds.y / scale);
   outline.suspended = !outline.suspended;
-  outline.update(true);
   if (!outline.suspended) {
     outline.update(true);
   }
@@ -107,7 +114,6 @@ export function initGraph(graph) {
     //mxEllipse:构造一个新的椭圆形状。
     return new mxEllipse(null, this.highlightColor, this.highlightColor, 2);
   };
-  console.log(graph);
   //getAllConnectionConstraints:返回给定终端的所有mxConnectionConstraints的数组。如果给定终端的形状为<mxStencilShape>，则返回相应mxStencil的约束。
   graph.getAllConnectionConstraints = function (terminal) {
     if (terminal !== null && terminal.shape !== null) {
@@ -133,4 +139,116 @@ export function initGraph(graph) {
   graph.connectionHandler.isConnectableCell = function () {
     return false;
   };
+}
+
+export function GetLayoutManager(graph, box) {
+  var layoutMgr = new mxLayoutManager(graph);
+  console.log(layoutMgr);
+  layoutMgr.getLayout = function (cell, eventName) {
+    return layout;
+  };
+}
+
+export function GetShowBox(graph, box) {
+  var graph = new mxGraph(container);
+
+  function updateStyle(state, hover) {
+    if (hover) {
+      state.style[mxConstants.STYLE_FILLCOLOR] = "#ff0000";
+    }
+
+    // Sets rounded style for both cases since the rounded style
+    // is not set in the default style and is therefore inherited
+    // once it is set, whereas the above overrides the default value
+    state.style[mxConstants.STYLE_ROUNDED] = hover ? "1" : "0";
+    state.style[mxConstants.STYLE_STROKEWIDTH] = hover ? "4" : "1";
+    state.style[mxConstants.STYLE_FONTSTYLE] = hover
+      ? mxConstants.FONT_BOLD
+      : "0";
+  }
+
+  // Changes fill color to red on mouseover
+  graph.addMouseListener({
+    currentState: null,
+    previousStyle: null,
+    mouseDown: function (sender, me) {
+      if (this.currentState != null) {
+        this.dragLeave(me.getEvent(), this.currentState);
+        this.currentState = null;
+      }
+    },
+    mouseMove: function (sender, me) {
+      if (this.currentState != null && me.getState() == this.currentState) {
+        return;
+      }
+
+      var tmp = graph.view.getState(me.getCell());
+
+      // Ignores everything but vertices
+      if (
+        graph.isMouseDown ||
+        (tmp != null && !graph.getModel().isVertex(tmp.cell))
+      ) {
+        tmp = null;
+      }
+
+      if (tmp != this.currentState) {
+        if (this.currentState != null) {
+          this.dragLeave(me.getEvent(), this.currentState);
+        }
+
+        this.currentState = tmp;
+
+        if (this.currentState != null) {
+          this.dragEnter(me.getEvent(), this.currentState);
+        }
+      }
+    },
+    mouseUp: function (sender, me) {},
+    dragEnter: function (evt, state) {
+      if (state != null) {
+        this.previousStyle = state.style;
+        state.style = mxUtils.clone(state.style);
+        updateStyle(state, true);
+        state.shape.apply(state);
+        state.shape.redraw();
+
+        if (state.text != null) {
+          state.text.apply(state);
+          state.text.redraw();
+        }
+      }
+    },
+    dragLeave: function (evt, state) {
+      if (state != null) {
+        state.style = this.previousStyle;
+        updateStyle(state, false);
+        state.shape.apply(state);
+        state.shape.redraw();
+
+        if (state.text != null) {
+          state.text.apply(state);
+          state.text.redraw();
+        }
+      }
+    },
+  });
+
+  // Enables rubberband selection
+  new mxRubberband(graph);
+
+  // Gets the default parent for inserting new cells. This
+  // is normally the first child of the root (ie. layer 0).
+  var parent = graph.getDefaultParent();
+
+  // Adds cells to the model in a single step
+  graph.getModel().beginUpdate();
+  try {
+    var v1 = graph.insertVertex(parent, null, "Hello,", 20, 20, 80, 30);
+    var v2 = graph.insertVertex(parent, null, "World!", 200, 150, 80, 30);
+    var e1 = graph.insertEdge(parent, null, "", v1, v2);
+  } finally {
+    // Updates the display
+    graph.getModel().endUpdate();
+  }
 }

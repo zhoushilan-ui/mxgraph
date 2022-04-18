@@ -29,6 +29,7 @@ export default {
   align-items: center;
   background-color: #e9eef3;
   overflow: auto;
+
   .couver-item {
     width: 100%;
     height: 100%;

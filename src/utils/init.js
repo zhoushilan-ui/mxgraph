@@ -75,4 +75,8 @@ window.mxDragSource = mxgraph.mxDragSource;
 window.mxOutline = mxgraph.mxOutline;
 window.mxMorphing = mxgraph.mxMorphing;
 window.mxCircleLayout = mxgraph.mxCircleLayout;
+window.mxLayoutManager = mxgraph.mxLayoutManager;
+window.mxMultiplicity = mxgraph.mxMultiplicity;
+window.mxCellOverlay = mxgraph.mxCellOverlay;
+window.mxCellTracker = mxgraph.mxCellTracker;
 export default mxgraph;

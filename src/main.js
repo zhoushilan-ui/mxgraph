@@ -8,7 +8,12 @@ import index from "@/assets/style/index.scss";
 import { getScroll } from "@/utils/window.js";
 import Shape from "@/utils/mx/mxShape";
 import { mapState, mapGetters } from "vuex";
-import { Flowsegment, drage, initGraph } from "./utils/model/Template";
+import {
+  Flowsegment,
+  drage,
+  initGraph,
+  GetLayoutManager,
+} from "./utils/model/Template";
 Vue.use(ElementUI);
 Vue.use(index);
 Vue.config.productionTip = false;
@@ -17,6 +22,7 @@ Vue.prototype.getShape = Shape;
 Vue.prototype.Flowsegment = Flowsegment;
 Vue.prototype.drage = drage;
 Vue.prototype.initGraph = initGraph;
+Vue.prototype.getLayoutManager = GetLayoutManager;
 new Vue({
   router,
   store,

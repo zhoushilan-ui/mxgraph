@@ -59,6 +59,14 @@
           @click="handleCreate"
           >小窗口</el-button
         >
+
+        <el-button
+          type="primary"
+          icon="el-icon-edit"
+          size="mini"
+          @click="handleLayout"
+          >Layout</el-button
+        >
         <el-dropdown trigger="click">
           <span class="el-dropdown-link">
             查看更多<i class="el-icon-caret-bottom el-icon--right"></i>
@@ -172,6 +180,7 @@ export default {
       dialogVisible: false,
       dialogTableVisible: false,
       isShow: false,
+      Layout: false,
       count: 0,
     };
   },
@@ -279,6 +288,16 @@ export default {
           this.graph,
           document.getElementById("container-drage"),
           this.count
+        );
+      }, 100);
+    },
+    handleLayout() {
+      this.Layout = true;
+      this.$emit("handleLayout", this.Layout);
+      setTimeout(() => {
+        this.getLayoutManager(
+          this.graph,
+          document.getElementById("container-layout")
         );
       }, 100);
     },
