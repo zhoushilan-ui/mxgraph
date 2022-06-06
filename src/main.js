@@ -14,6 +14,46 @@ import {
   initGraph,
   GetLayoutManager,
 } from "./utils/model/Template";
+
+// 阿里图标库
+import "@/assets/iconfont/iconfont.css";
+
+//全局函数引入，挂载
+import {
+  SelectAll,
+  SelectNone,
+  Show,
+  ExportImage,
+  Cut,
+  Refresh,
+  Copy,
+  Paste,
+  Delete,
+  Undo,
+  Redo,
+  ZoomIn,
+  ZoomOut,
+  Edit,
+  SelectPrevious,
+  SelectNext,
+} from "./utils/global.js";
+Vue.prototype.selectAll = SelectAll;
+Vue.prototype.selectNone = SelectNone;
+Vue.prototype.show = Show;
+Vue.prototype.exportImage = ExportImage;
+Vue.prototype.cut = Cut;
+Vue.prototype.refresh = Refresh;
+Vue.prototype.copy = Copy;
+Vue.prototype.paste = Paste;
+Vue.prototype.delete = Delete;
+Vue.prototype.undo = Undo;
+Vue.prototype.redo = Redo;
+Vue.prototype.zoomIn = ZoomIn;
+Vue.prototype.zoomOut = ZoomOut;
+Vue.prototype.edit = Edit;
+Vue.prototype.selectPrevious = SelectPrevious;
+Vue.prototype.selectNext = SelectNext;
+
 Vue.use(ElementUI);
 Vue.use(index);
 Vue.config.productionTip = false;

@@ -1,0 +1,58 @@
+{
+  "id": "3445963",
+  "name": "mxgraph",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "4880423",
+      "name": "未全选",
+      "font_class": "weiquanxuan",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "6978128",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "11651418",
+      "name": "创建指标",
+      "font_class": "chuangjianzhibiao",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "11839489",
+      "name": "保存",
+      "font_class": "baocun",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "16656979",
+      "name": "数据展示",
+      "font_class": "182",
+      "unicode": "e729",
+      "unicode_decimal": 59177
+    },
+    {
+      "icon_id": "17095599",
+      "name": "打开",
+      "font_class": "244",
+      "unicode": "e739",
+      "unicode_decimal": 59193
+    },
+    {
+      "icon_id": "25512455",
+      "name": "-_全选",
+      "font_class": "-_quanxuan",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    }
+  ]
+}

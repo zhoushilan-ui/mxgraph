@@ -1,57 +1,30 @@
 <template>
   <div class="app-container">
+    <div class="panel-title"></div>
     <div class="left-panel">
-      <el-row>
-        <el-button
-          type="success"
-          icon="el-icon-folder-opened"
-          size="mini"
-          @click="open"
-          >打开</el-button
-        >
-        <el-button
-          type="info"
-          icon="el-icon-folder-add"
-          size="mini"
-          @click="dialogTableVisible = true"
-          >创建</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          @click="handleRemove"
-          >删除全部</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          @click="handleSave"
-          >保存</el-button
-        >
+      <el-row class="table">
+        <div class="icon-open" @click="open" data-title="打开">
+          <i class="iconfont icon-244"></i>
+        </div>
 
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          @click="handleSelectAll"
-          >全选</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          @click="handleSelectNone"
-          >全不选</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          @click="handleShow"
-          >展示</el-button
-        >
+        <div class="icon-open" @click="createMoban()" data-title="创建">
+          <i class="iconfont icon-chuangjianzhibiao"></i>
+        </div>
+        <div class="icon-open" @click="handleRemove" data-title="删除全部">
+          <i class="iconfont icon-shanchu"></i>
+        </div>
+        <div class="icon-open" @click="handleSave" data-title="保存">
+          <i class="iconfont icon-baocun"></i>
+        </div>
+        <div class="icon-open" @click="handleSelectAll" data-title="全选">
+          <i class="iconfont icon--_quanxuan"></i>
+        </div>
+        <div class="icon-open" @click="handleSelectNone" data-title="全不选">
+          <i class="iconfont icon-weiquanxuan"></i>
+        </div>
+        <div class="icon-open" @click="handleShow" data-title="展示">
+          <i class="iconfont icon-182"></i>
+        </div>
         <el-button
           type="primary"
           icon="el-icon-edit"
@@ -87,7 +60,6 @@
             <el-dropdown-item class="clearfix">
               <span @click="handlePaste">粘贴</span>
             </el-dropdown-item>
-
             <el-dropdown-item class="clearfix">
               <span @click="handleUndo">撤销</span>
             </el-dropdown-item>
@@ -97,7 +69,6 @@
             <el-dropdown-item class="clearfix">
               <span @click="handleZoomIn">放大</span>
             </el-dropdown-item>
-
             <el-dropdown-item class="clearfix">
               <span @click="handleZoomOut">缩小</span>
             </el-dropdown-item>
@@ -224,6 +195,9 @@ export default {
   },
   mounted() {},
   methods: {
+    createMoban() {
+      this.dialogTableVisible = true;
+    },
     //显示面板
     handClick() {
       this.$store.commit("setColor", !this.isPanel);
@@ -280,16 +254,16 @@ export default {
     },
     //小窗口
     handleCreate() {
-      this.isShow = true;
-      this.$emit("Showdrag", this.isShow);
-      this.count++;
-      setTimeout(() => {
-        this.drage(
-          this.graph,
-          document.getElementById("container-drage"),
-          this.count
-        );
-      }, 100);
+      //   this.isShow = true;
+      //   this.$emit("Showdrag", this.isShow);
+      //   this.count++;
+      //   setTimeout(() => {
+      //     this.drage(
+      //       this.graph,
+      //       document.getElementById("container-drage"),
+      //       this.count
+      //     );
+      //   }, 100);
     },
     handleLayout() {
       this.Layout = true;
@@ -319,67 +293,67 @@ export default {
     },
     //全选
     handleSelectAll() {
-      this.editor.actions.selectAll(this.editor);
+      this.selectAll(this.editor);
     },
     //全部选
     handleSelectNone() {
-      this.editor.actions.selectNone(this.editor);
+      this.selectNone(this.editor);
     },
     //展示
     handleShow() {
-      this.editor.actions.show(this.editor);
+      this.show(this.editor);
     },
     //导出图片
     handleExportImage() {
-      this.editor.actions.exportImage(this.editor);
+      this.exportImage(this.editor);
     },
     //剪切
     handleCut() {
-      this.editor.actions.cut(this.editor);
+      this.cut(this.editor);
     },
     //刷新
     handleRefresh() {
-      this.editor.actions.refresh(this.editor);
+      this.refresh(this.editor);
     },
     //复制
     handleCopy() {
-      this.editor.actions.copy(this.editor);
+      this.copy(this.editor);
     },
     //粘贴
     handlePaste() {
-      this.editor.actions.paste(this.editor);
+      this.paste(this.editor);
     },
     //删除当前选中的单元格
     handleDelete() {
-      this.editor.actions.delete(this.editor);
+      this.delete(this.editor);
     },
     //撤销
     handleUndo() {
-      this.editor.actions.undo(this.editor);
+      this.undo(this.editor);
     },
     //重做
     handleRedo() {
-      this.editor.actions.redo(this.editor);
+      this.redo(this.editor);
     },
     //放大
     handleZoomIn() {
-      this.editor.actions.zoomIn(this.editor);
+      this.zoomIn(this.editor);
     },
     //缩小
     handleZoomOut() {
-      this.editor.actions.zoomOut(this.editor);
+      this.zoomOut(this.editor);
     },
     //编辑
     handleEdit() {
-      this.editor.actions.edit(this.editor);
+      this.edit(this.editor);
     },
     //选择下一步
     handleSelectPrevious() {
-      this.editor.actions.selectPrevious(this.editor);
+      this.selectPrevious(this.editor);
     },
     //编辑
     handleSelectNext() {
-      this.editor.actions.selectNext(this.editor);
+      this.selectNext(this.editor);
     },
     //创建流动线段模板
     handleFlow() {
@@ -420,5 +394,10 @@ $width: 80%;
   ::v-deep .el-tag {
     cursor: pointer;
   }
+}
+
+.table {
+  display: flex;
+  flex-direction: row;
 }
 </style>
